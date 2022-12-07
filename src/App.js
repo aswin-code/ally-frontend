@@ -18,14 +18,13 @@ import { ToastContainer } from 'react-toastify'
 import Otp from "./Pages/otp/Otp";
 import 'react-toastify/dist/ReactToastify.css';
 import PostModal from "./components/modal/createPostModal/ModalBody.jsx/PostModal";
-import useAuth from "./hooks/useAuth";
 
 
 
 
 
 function App() {
-  const current = localStorage.getItem('current') || null
+  const current = true
   const Layout = () => {
 
     const { darkMode } = useContext(DarkModeContext)
