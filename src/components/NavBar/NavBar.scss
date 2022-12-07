@@ -40,8 +40,16 @@
             border-radius: 5px;
             padding:5px;
           input{
+          
              @include mobile{
               display: none;
+
+            }
+            @include laptop{
+              width: 250px;
+            }
+            @include tablet{
+              width: 200px;
             }
             border: none;
             width: 500px;
@@ -53,7 +61,9 @@
     .right{
        @include mobile{
       display: none;
-      
+    }
+    @include tablet{
+      display: none;
     }
         display: flex;
         align-items: center;
@@ -63,6 +73,7 @@
             align-items: center;
             gap: 10px;
             font-weight: 500;
+            cursor: pointer;
             img{
                 height: 30px;
                 width: 30px;

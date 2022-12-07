@@ -2,7 +2,6 @@ import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
 import {
   RouterProvider,
-  Route,
   createBrowserRouter,
   Outlet,
   Navigate
@@ -15,11 +14,20 @@ import Profile from './Pages/Profile/Profile';
 import './style.scss'
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
+import { ToastContainer } from 'react-toastify'
 import Otp from "./Pages/otp/Otp";
+import 'react-toastify/dist/ReactToastify.css';
+import PostModal from "./components/modal/createPostModal/ModalBody.jsx/PostModal";
+import useAuth from "./hooks/useAuth";
+
+
+
+
 
 function App() {
-  const currentUser = true
+  const current = localStorage.getItem('current') || null
   const Layout = () => {
+
     const { darkMode } = useContext(DarkModeContext)
     return (
       <div className={`theme-${darkMode ? "dark" : "light"}`}>
@@ -35,7 +43,7 @@ function App() {
     )
   };
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
+    if (!current) {
       return <Navigate to='/login' />
     }
     return children
@@ -52,7 +60,7 @@ function App() {
         {
           path: '/profile/:id',
           element: <Profile />
-        }
+        },
       ]
     },
     {
@@ -67,9 +75,12 @@ function App() {
       element: <Otp />
     }
   ])
+
   return (
     <div className="App">
       <RouterProvider router={router} />
+      <ToastContainer />
+      <PostModal />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+@import '../../style.scss';
 .login{
     height: 100vh;
     background-color: rgb(193,190,255);
@@ -12,8 +13,21 @@
         display: flex;
         min-height: 600px;
         overflow: hidden;
+        @include laptop{
+            width: 70%;
+        }
+        @include tablet{
+            width: 80%;
+        }
+        @include mobile{
+            width: 95%;
+        }
         .left{
             flex: 1;
+            @include mobile{
+                width: 50%;
+                padding: 15px;
+            }
             display: flex;
             flex-direction: column;
             background:linear-gradient(rgba(39,11,96,0.5),rgba(39,11,96,0.5)), url(https://media.istockphoto.com/photos/ll-always-be-here-to-support-her-picture-id1302499450?b=1&k=20&m=1302499450&s=612x612&w=0&h=cWhLaZXBybzcl7g5SchrvR4mE4yiGzsMTL67uDGI3FQ=)center;
@@ -54,6 +68,11 @@
             }
         }
         .right{
+              @include mobile{
+                width: 50%;
+                padding: 20px;
+            }
+           
             flex: 1;
             padding: 50px;
             display: flex;

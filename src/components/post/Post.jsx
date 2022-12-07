@@ -7,20 +7,29 @@ import MessageIcon from '@mui/icons-material/Message';
 import ShareIcon from '@mui/icons-material/Share';
 import Comments from '../comments/Comments';
 import { useState } from 'react';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import { IconButton } from '@mui/material';
+import useAuth from '../../hooks/useAuth';
 
+const Post = ({ post, action }) => {
+    const axiosprivate = useAxiosPrivate()
+    const { user } = useAuth()
+    const handleLike = async (e) => {
 
-const Post = ({ post }) => {
+        await axiosprivate.get(`/post/${e}/likes`).then((res) => {
+            action(prev => prev + 1)
+        })
+    }
     const [commentOpen, setCommentOpen] = useState(false)
-    const liked = false;
     return (
         <div className="post">
             <div className="container">
                 <div className="user">
                     <div className="userInfo">
-                        <img src={post.profilePic} alt="" />
+                        <img src={post.userid?.profilePic} alt="" />
                         <div className="details">
-                            <Link to={`/profile/${post.userId}`} style={{ textDecoration: "none", color: 'inherit' }}>
-                                <span className='name'>{post.name}</span>
+                            <Link to={`/profile/${post.userid._id}`} state={post.userid._id} style={{ textDecoration: "none", color: 'inherit' }}>
+                                <span className='name'>{post.userid?.name}</span>
                             </Link>
                             <span className='date'>1 min ago</span>
                         </div>
@@ -28,24 +37,24 @@ const Post = ({ post }) => {
                     <MoreHorizIcon />
                 </div>
                 <div className="content">
-                    <p>{post.desc}</p>
-                    <img src={post.img} alt="" />
+                    <p>{post.caption}</p>
+                    <img src={post.image} alt="" loading='lazy' />
                 </div>
                 <div className="info">
                     <div className="item">
-                        {liked ? <FavoriteIcon></FavoriteIcon> : <FavoriteBorderIcon />}
-                        12 Likes
+                        {post.Like.find(e => e === user.user._id) ? <IconButton sx={{ color: 'red' }} onClick={() => handleLike(post._id)}><FavoriteIcon /></IconButton> : <IconButton onClick={() => handleLike(post._id)}> <FavoriteBorderIcon /></IconButton>}
+                        {post.Like.length} Likes
                     </div>
                     <div className="item" onClick={() => setCommentOpen(e => !e)}>
                         <MessageIcon />
-                        12 Comments
+                        Comments
                     </div>
                     <div className="item">
                         <ShareIcon />
                         Share
                     </div>
                 </div>
-                {commentOpen && <Comments />}
+                {commentOpen && <Comments postid={post._id} />}
 
 
             </div>

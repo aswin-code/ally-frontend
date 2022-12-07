@@ -14,6 +14,9 @@
      @include mobile{
      display: none; 
     }
+    @include tablet{
+        display: none;
+    }
 
     .container{
         padding: 20px;
@@ -49,6 +52,8 @@
                  display: flex;
                 align-items: center;
                 gap: 10px;
+                cursor: pointer;
+                transition: 0.2 ease-out;
                 img{
                      height: 30px;
                     width: 30px;
@@ -59,6 +64,11 @@
                 span{
                     font-size: 14px;
                 }
+            }
+            .item:hover{
+                background-color: aliceblue;
+                transition: 0.2s ease-in;
+                color: black;
             }
         }
     }

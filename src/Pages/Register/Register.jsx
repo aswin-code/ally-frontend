@@ -1,12 +1,16 @@
-import { Link } from 'react-router-dom'
-import './Register.scss'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import axios from '../../api/axios'
+import { Link, useNavigate } from 'react-router-dom';
+import './Register.scss';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import axios from '../../api/axios';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
 const initialValue = {
     email: '',
     name: '',
-    password: ''
+    password: '',
+    repassword: ''
 }
 
 const validationSchema = Yup.object({
@@ -20,21 +24,32 @@ const validationSchema = Yup.object({
         .required('Required'),
     password: Yup.string()
         .min(8, 'Password is too short - should be 8 chars minimum.')
+        .required('Required'),
+    repassword: Yup.string()
         .required('Required')
+        .oneOf([Yup.ref('password')], 'Passwords must match')
 })
 
-const onSubmit = async values => {
-    try {
-        await axios.post('/auth/register', values).then(({ data }) => {
-            console.log(data);
-        })
-    } catch ({ response }) {
-        console.log(response.data)
 
-    }
-}
 
 const Register = () => {
+    const { login } = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    const onSubmit = async values => {
+        try {
+            await axios.post('/auth/register', values).then((res) => {
+                console.log(res)
+                login(res.data.accessToken)
+                navigate('/')
+            })
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.response.data.message)
+
+        }
+    }
     return (
         <div className='register'>
             <div className="card">
@@ -49,7 +64,9 @@ const Register = () => {
                             <ErrorMessage name='name' component='span' className='error-input' />
                             <Field type="password" name="password" id="" placeholder='Password' />
                             <ErrorMessage name='password' component='span' className='error-input' />
-                            <button type='submit'>Login</button>
+                            <Field type="password" name="repassword" id="" placeholder='Confirm Password' />
+                            <ErrorMessage name='repassword' component='span' className='error-input' />
+                            <button type='submit'>Register</button>
                         </Form>
                     </Formik>
                 </div>

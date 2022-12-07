@@ -1,13 +1,12 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
-import { useContext } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
-import { AuthContext } from '../../context/AuthContext'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { GoogleLogin } from '@react-oauth/google';
 import './Login.scss'
+import { toast } from 'react-toastify'
+import useAuth from '../../hooks/useAuth'
+
 
 const initialValue = {
     email: '',
@@ -21,33 +20,40 @@ const validationSchema = Yup.object({
 })
 
 const Login = () => {
+    const { login, current } = useAuth()
     const handleGoogleLogin = (data) => {
         axios.post('/auth/google', { data }).then(({ data }) => {
             console.log(data)
-            Login();
-            navigate('/')
+            login(data.accessToken, data.userid, data.userName);
+            // navigate('/')
         })
     }
-    const { Login, user } = useContext(AuthContext)
     const navigate = useNavigate()
     const onSubmit = async values => {
         try {
-            await axios.post('/auth/login', values).then(({ data }) => {
-                console.log(data)
-                Login();
+            await axios.post('/auth/login', values).then((res) => {
+
+                login(res.data.accessToken, res.data.user);
                 navigate('/')
             })
         } catch (error) {
             console.log(error)
+            toast.error(error.response.data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
         }
     }
-
-
-
     return (
 
         <div className='login'>
-            {user && <Navigate to='/' />}
+            {current && <Navigate to='/' />}
             <div className="card">
                 <div className="left">
                     <h1>All<span>y</span></h1>
@@ -76,7 +82,7 @@ const Login = () => {
                             handleGoogleLogin(credentialResponse)
                         }}
                         onError={() => {
-                            console.log('Login Failed');
+                            toast.error('something went wrong please try again')
                         }}
                     />
                 </div>
