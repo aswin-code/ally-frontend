@@ -1,5 +1,5 @@
 import axios from 'axios';
-const BASE_URL = `http://3.109.60.251/api/v1`
+const BASE_URL = `https://ultramarine-drill-vest.cyclic.app/api/v1`
 export default axios.create({
     baseURL: BASE_URL, headers: { 'Content-Type': 'application/json' },
     withCredentials: true
